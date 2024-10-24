@@ -38,13 +38,19 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 初始化图表
+        // 初始化 Lightweight Charts
         const chart = LightweightCharts.createChart(document.getElementById('ohlc-chart'), {
             width: window.innerWidth,
             height: 500,
             layout: {
                 backgroundColor: '#ffffff',
                 textColor: '#000000',
+            },
+            timeScale: {
+                timeVisible: true,          // 启用详细时间
+                secondsVisible: false,      // 不显示秒（如果你不需要）
+                rightOffset: 12,            // 右边距，控制时间轴结束位置的间隔
+                barSpacing: 5,              // 控制每根蜡烛之间的间距
             },
         });
 
