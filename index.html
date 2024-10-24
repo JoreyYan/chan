@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OHLC Chart from Firebase</title>
+    <style>
+        #ohlc-chart {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <!-- Lightweight Charts -->
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+    <h1>OHLC Chart from Firebase</h1>
+    <div id="ohlc-chart"></div>
+
+    <script>
+        // Firebase 配置
+        const firebaseConfig = {
+
+              apiKey: "AIzaSyCxTGMoZEzSc7qpt9dlvKp_A71_aw2QDgI",
+              authDomain: "tradeview-67e84.firebaseapp.com",
+              databaseURL: "https://tradeview-67e84-default-rtdb.firebaseio.com",
+              projectId: "tradeview-67e84",
+              storageBucket: "tradeview-67e84.appspot.com",
+              messagingSenderId: "786557079619",
+              appId: "1:786557079619:web:ebde64cbc7943f6d1e44f6",
+              measurementId: "G-RE0C4MNNZ1"
+        };
+
+        // 初始化 Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 初始化图表
+        const chart = LightweightCharts.createChart(document.getElementById('ohlc-chart'), {
+            width: window.innerWidth,
+            height: 500,
+            layout: {
+                backgroundColor: '#ffffff',
+                textColor: '#000000',
+            },
+        });
+
+        const candlestickSeries = chart.addCandlestickSeries({
+            upColor: '#4caf50',
+            downColor: '#f44336',
+            borderVisible: false,
+            wickUpColor: '#4caf50',
+            wickDownColor: '#f44336',
+        });
+
+        let chartData = [];
+
+        // 从 Firebase 实时获取 OHLC 数据
+        function fetchFirebaseData() {
+            database.ref('ohlc-data').on('child_added', function(snapshot) {
+                const data = snapshot.val();
+                chartData.push({
+                    time: data.time,
+                    open: data.open,
+                    high: data.high,
+                    low: data.low,
+                    close: data.close,
+                });
+                candlestickSeries.setData(chartData);  // 更新图表
+            });
+        }
+
+        // 加载 Firebase 数据
+        fetchFirebaseData();
+    </script>
+</body>
+</html>
