@@ -23,7 +23,6 @@
     <script>
         // Firebase 配置
         const firebaseConfig = {
-
               apiKey: "AIzaSyCxTGMoZEzSc7qpt9dlvKp_A71_aw2QDgI",
               authDomain: "tradeview-67e84.firebaseapp.com",
               databaseURL: "https://tradeview-67e84-default-rtdb.firebaseio.com",
@@ -47,10 +46,8 @@
                 textColor: '#000000',
             },
             timeScale: {
-                timeVisible: true,          // 启用详细时间
-                secondsVisible: false,      // 不显示秒（如果你不需要）
-                rightOffset: 12,            // 右边距，控制时间轴结束位置的间隔
-                barSpacing: 5,              // 控制每根蜡烛之间的间距
+                timeVisible: true,          // 启用详细时间显示
+                secondsVisible: true,       // 显示秒（如果需要到秒级别显示）
             },
         });
 
@@ -69,7 +66,7 @@
             database.ref('ohlc-data').on('child_added', function(snapshot) {
                 const data = snapshot.val();
                 chartData.push({
-                    time: data.time,
+                    time: parseInt(data.time, 10), // 确保时间是秒级时间戳
                     open: data.open,
                     high: data.high,
                     low: data.low,
